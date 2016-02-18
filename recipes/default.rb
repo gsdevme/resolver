@@ -32,4 +32,13 @@ else
     # This syntax makes the resolver sub-keys available directly
     variables node['resolver']
   end
+  
+  ruby_block "Disable DHCP from resetting resolv.conf" do
+    block do
+      fe = Chef::Util::FileEdit.new("/etc/sysconfig/network-scripts/ifcfg-eth0")
+      fe.insert_line_if_no_match(/PEERDNS=no/,"PEERDNS=no")
+      fe.write_file
+    end
+    only_if { ::File.exists?('"/etc/sysconfig/network-scripts/ifcfg-eth0"') }
+  end
 end
