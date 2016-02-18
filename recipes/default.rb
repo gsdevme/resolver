@@ -32,4 +32,10 @@ else
     # This syntax makes the resolver sub-keys available directly
     variables node['resolver']
   end
+  
+  if platform?("redhat", "centos", "fedora")
+    file '/etc/dhclient-enter-hooks' do
+      content "make_resolv_conf(){\n:\n}"
+    end
+  end
 end
