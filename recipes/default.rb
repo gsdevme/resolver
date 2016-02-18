@@ -24,9 +24,9 @@ if node['resolver']['nameservers'].empty? || node['resolver']['nameservers'][0].
   Chef::Log.info("#{cookbook_name}::#{recipe_name} exiting to prevent a potential breaking change in /etc/resolv.conf.")
   return
 else
-  bash 'unwrite protect resolv.conf' do
+  execute 'unwrite protect resolv.conf' do
     user 'root'
-    cwd 'chattr +i /etc/resolv.conf'
+    command 'chattr +i /etc/resolv.conf'
   end
   
   template '/etc/resolv.conf' do
@@ -38,8 +38,8 @@ else
     variables node['resolver']
   end
   
-  bash 'write protect resolv.conf' do
+  execute 'write protect resolv.conf' do
     user 'root'
-    cwd 'chattr +i /etc/resolv.conf'
+    command 'chattr +i /etc/resolv.conf'
   end
 end
