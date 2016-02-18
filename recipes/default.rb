@@ -24,6 +24,11 @@ if node['resolver']['nameservers'].empty? || node['resolver']['nameservers'][0].
   Chef::Log.info("#{cookbook_name}::#{recipe_name} exiting to prevent a potential breaking change in /etc/resolv.conf.")
   return
 else
+  bash 'unwrite protect resolv.conf' do
+    user 'root'
+    cwd 'chattr +i /etc/resolv.conf'
+  end
+  
   template '/etc/resolv.conf' do
     source 'resolv.conf.erb'
     owner 'root'
@@ -33,9 +38,8 @@ else
     variables node['resolver']
   end
   
-  if platform?("redhat", "centos", "fedora")
-    file '/etc/dhclient-enter-hooks' do
-      content "make_resolv_conf(){\n:\n}"
-    end
+  bash 'write protect resolv.conf' do
+    user 'root'
+    cwd 'chattr +i /etc/resolv.conf'
   end
 end
