@@ -39,6 +39,6 @@ else
       fe.insert_line_if_no_match(/PEERDNS=no/,"PEERDNS=no")
       fe.write_file
     end
-    only_if { ::File.exists?('"/etc/sysconfig/network-scripts/ifcfg-eth0"') }
+    only_if { ::File.exists?("/etc/sysconfig/network-scripts/ifcfg-eth0") }
   end
 end
